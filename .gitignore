@@ -27,3 +27,7 @@ __pycache__/
 # VM-эмуляция: данные закоммичены намеренно, чтобы compose поднимался сразу с историей
 !vm-emulation/volumes/**
 !vm-emulation/s3-seed/**
+
+# Runtime-файлы postgres (мешают старту при восстановлении из git)
+vm-emulation/volumes/pgdata/postmaster.pid
+vm-emulation/volumes/pgdata/postmaster.opts

@@ -1,0 +1,4 @@
+vm-emulation/s3-seed/mlflow/1/4f224f23fa914f18b2da0eb2d13dbc93/artifacts/model/model.pkl filter=lfs diff=lfs merge=lfs -text
+
+# Данные postgres не трогаем переносы строк
+vm-emulation/volumes/pgdata/** -text

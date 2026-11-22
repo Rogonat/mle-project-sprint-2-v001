@@ -1,0 +1,10 @@
+autofeat__floor
+manual__longitude_2.0
+manual__floors_total
+autofeat__1/floors_total
+manual__total_area living_area
+manual__build_year
+manual__longitude
+manual__latitude
+autofeat__total_area
+manual__total_area^2
