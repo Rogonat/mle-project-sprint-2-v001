@@ -4,7 +4,15 @@
 
 ## Важное примечание
 
-ВМ курса в этой итерации не использовалась, т.к. несмотря на восстановление ВМ еще сохраняются проблемы с подключением и наполнением. Проект выполнен в локальном окружении, которое повторяет инфраструктуру ВМ: PostgreSQL для MLflow и S3-совместимый LocalStack поднимаются в Docker, MLflow Tracking Server с Model Registry запускается локально из виртуального окружения (mlflow входит в requirements.txt). Всё окружение собрано в папке `vm-emulation/` и поднимается одной командой. База PostgreSQL с экспериментами и Model Registry лежит в `vm-emulation/volumes/pgdata/` и закоммичена в репозиторий; бакет S3 восстанавливается автоматически из `vm-emulation/s3-seed/` сервисом s3-restore при старте compose. Финальный `model.pkl` весит 490 МБ — больше лимита GitHub в 100 МБ, поэтому он хранится через Git LFS (правило в `.gitattributes`). После клонирования нужно установить git-lfs, если его нет (`git lfs install`), и выполнить `git lfs pull`. После этого `bash mlflow_server/run_mlflow.sh` поднимает сервисы сразу с историей проекта.
+**Это облегчённая ветка `without-vm`** — версия репозитория без папки `vm-emulation/`, чтобы ZIP-архив занимал меньше 10 МБ. Вся инфраструктура с состоянием проекта дамп PostgreSQL с экспериментами и Model Registry, содержимое S3-бакета и `model.pkl` через Git LFS (490 МБ) лежит **в ветке `main` в папке `vm-emulation/`**. Чтобы поднять проект полностью:
+
+```shell
+git checkout main
+git lfs pull
+bash mlflow_server/run_mlflow.sh
+```
+
+ВМ курса в этой итерации не использовалась, т.к. несмотря на восстановление ВМ еще сохраняются проблемы с подключением и наполнением. Проект выполнен в локальном окружении, которое повторяет инфраструктуру ВМ: PostgreSQL для MLflow и S3-совместимый LocalStack поднимаются в Docker, MLflow Tracking Server с Model Registry запускается локально из виртуального окружения (mlflow входит в requirements.txt). Всё окружение собрано в папке `vm-emulation/` (ветка `main`) и поднимается одной командой. База PostgreSQL с экспериментами и Model Registry лежит в `vm-emulation/volumes/pgdata/` и закоммичена в репозиторий; бакет S3 восстанавливается автоматически из `vm-emulation/s3-seed/` сервисом s3-restore при старте compose. Финальный `model.pkl` весит 490 МБ — больше лимита GitHub в 100 МБ, поэтому он хранится через Git LFS (правило в `.gitattributes`). После клонирования нужно установить git-lfs, если его нет (`git lfs install`), и выполнить `git lfs pull`. После этого `bash mlflow_server/run_mlflow.sh` поднимает сервисы сразу с историей проекта.
 
 ## Задача
 
@@ -44,11 +52,7 @@ model_improvement/
   model_improvement.ipynb       # единый ноутбук с этапами 2–5
   utils.py                      # загрузка данных, split, метрики, логирование окружения
   log_notebook.py               # логирование выполненного ноутбука
-vm-emulation/
-  docker-compose.yml            # локальная эмуляция: PostgreSQL, S3 (LocalStack), восстановление бакета
-  local-emulation.env           # локальные настройки без облачных секретов
-  volumes/                      # данные PostgreSQL (закоммичены); compose стартует сразу с историей
-  s3-seed/                      # содержимое бакета S3 (85 объектов; model.pkl 490 МБ — через Git LFS)
+vm-emulation/                  # только на ветке main: compose, данные PostgreSQL, s3-seed (Git LFS)
 .env.example                    # шаблон облачных настроек
 requirements.txt                # зафиксированные зависимости
 screenshots/                    # скриншоты MLflow UI: Model Registry, эксперимент, финальный run
@@ -197,6 +201,9 @@ http://127.0.0.1:5000
 Логины и ключи в local-emulation.env тестовые и работают только внутри локального Docker-окружения.
 
 ## Инструкция по запуску
+
+Инфраструктура `vm-emulation/` есть только на ветке `main` (см. важное примечание выше); запуск оттуда поднимает MLflow сразу с историей проекта.
+
 1. Создаём окружение и устанавливаем зависимости (mlflow входит в requirements.txt):
 
 ```shell

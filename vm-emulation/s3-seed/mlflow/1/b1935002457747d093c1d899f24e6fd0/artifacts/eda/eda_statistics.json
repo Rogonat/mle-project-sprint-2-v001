@@ -1,9 +1,0 @@
-{
-  "price_mean": 12478133.62248128,
-  "price_median": 11000000.0,
-  "price_skew": 1.8172368164762396,
-  "total_area_pearson": 0.6769457773314851,
-  "living_area_pearson": 0.5951416632998373,
-  "rooms_pearson": 0.5105661725250086,
-  "building_type_pearson": -0.27874790774539815
-}
